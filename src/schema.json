@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "NineBodyClosedAuditTensorPacket",
+  "type": "object",
+  "required": [
+    "version",
+    "delta",
+    "bodies",
+    "checks",
+    "closure"
+  ],
+  "properties": {
+    "version": {
+      "type": "string"
+    },
+    "delta": {
+      "type": "number"
+    },
+    "bodies": {
+      "type": "array",
+      "minItems": 9,
+      "maxItems": 9
+    },
+    "checks": {
+      "type": "object"
+    },
+    "closure": {
+      "type": "object",
+      "required": [
+        "closed",
+        "state_index",
+        "state_total",
+        "vector"
+      ],
+      "properties": {
+        "closed": {
+          "type": "boolean"
+        },
+        "state_index": {
+          "type": "integer"
+        },
+        "state_total": {
+          "type": "integer"
+        },
+        "vector": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "version": "1.0.0",
+  "delta": 1e-09,
+  "bodies": [
+    "HR",
+    "PROJECT_MANAGER",
+    "WORKER",
+    "PROJECT",
+    "SHADOW_AUDITOR",
+    "INPUT_AUDITOR",
+    "OUTPUT_AUDITOR",
+    "IO_FULCRUM",
+    "WATCHER"
+  ],
+  "checks": {
+    "rights_balanced": true,
+    "task_power_bounded": true,
+    "worker_protected": true,
+    "project_coherent": true,
+    "shadow_pressure_audited": true,
+    "input_verified": true,
+    "output_verified": true,
+    "io_symmetric": true,
+    "watcher_confirms": true
+  },
+  "closure": {
+    "closed": true,
+    "state_index": 1,
+    "state_total": 3002,
+    "vector": "."
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "name": "nine_body_closed_audit_tensor",
+  "version": "1.0.0",
+  "status": "production_candidate",
+  "signature": "V9 / 3002 -> .",
+  "delta_target": 1e-09,
+  "core_laws": [
+    "no power audits itself",
+    "no system validates its own input or output alone",
+    "every observer is also observed",
+    "closure requires bidirectional accuracy"
+  ],
+  "bodies": [
+    "HR",
+    "PROJECT_MANAGER",
+    "WORKER",
+    "PROJECT",
+    "SHADOW_AUDITOR",
+    "INPUT_AUDITOR",
+    "OUTPUT_AUDITOR",
+    "IO_FULCRUM",
+    "WATCHER"
+  ],
+  "closure_states": 3002
+}

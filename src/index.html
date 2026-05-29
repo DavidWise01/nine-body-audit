@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Nine-Body Closed Audit Tensor</title>
+<style>
+:root{
+ --bg:#02030a;--ink:#edfaff;--cyan:#67e8f9;--mint:#86efac;--violet:#c084fc;--gold:#facc15;--rose:#fb7185;--orange:#fb923c;
+ --grid:rgba(103,232,249,.05)
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:#000;color:var(--ink);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+body{
+ padding:18px;
+ background:
+ radial-gradient(circle at 50% 42%,rgba(103,232,249,.15),transparent 30%),
+ radial-gradient(circle at 22% 18%,rgba(192,132,252,.12),transparent 24%),
+ radial-gradient(circle at 80% 18%,rgba(250,204,21,.10),transparent 22%),
+ linear-gradient(var(--grid) 1px,transparent 1px),
+ linear-gradient(90deg,var(--grid) 1px,transparent 1px),
+ var(--bg);
+ background-size:100% 100%,100% 100%,100% 100%,28px 28px,28px 28px;
+}
+.app{max-width:1600px;margin:0 auto;border:1px solid rgba(103,232,249,.24);border-radius:28px;background:rgba(0,0,0,.42);overflow:hidden;box-shadow:0 34px 120px rgba(0,0,0,.8)}
+header{padding:26px;border-bottom:1px solid rgba(103,232,249,.18);display:flex;justify-content:space-between;gap:20px;align-items:flex-end}
+h1{margin:0;font-size:clamp(32px,6vw,78px);font-weight:300;letter-spacing:.05em;text-shadow:0 0 32px rgba(103,232,249,.3)}
+.sub{font-size:12px;color:#a6dbe8;text-align:right;line-height:1.55}
+.grid{display:grid;grid-template-columns:360px 1fr 400px;gap:16px;padding:16px}
+@media(max-width:1180px){.grid{grid-template-columns:1fr}.stage{height:820px}.sub{text-align:left}}
+.box{border:1px solid rgba(103,232,249,.22);border-radius:20px;background:rgba(0,0,0,.52);padding:16px;backdrop-filter:blur(8px)}
+.box h3{margin:0 0 12px;color:var(--cyan);font-size:12px;text-transform:uppercase;letter-spacing:.16em}
+.stage{height:820px;border:1px solid rgba(103,232,249,.22);border-radius:20px;overflow:hidden;position:relative;background:rgba(0,0,0,.25)}
+canvas{width:100%;height:100%;display:block}
+button,input{width:100%;border:1px solid rgba(103,232,249,.36);background:rgba(0,0,0,.36);color:var(--ink);border-radius:14px;padding:10px;font:inherit}
+button{cursor:pointer;text-transform:uppercase;font-weight:800;letter-spacing:.06em}
+button:hover{box-shadow:0 0 24px rgba(103,232,249,.22);transform:translateY(-1px)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.code{white-space:pre-wrap;font-size:12px;line-height:1.48;color:#d8fbff}
+.log{height:260px;overflow:auto;font-size:11px;line-height:1.45;border:1px solid rgba(103,232,249,.16);border-radius:16px;padding:10px;background:rgba(0,0,0,.35);color:#d8fbff}
+.hud{position:absolute;top:12px;left:12px;right:12px;display:flex;gap:8px;flex-wrap:wrap;pointer-events:none}
+.tag{font-size:11px;border:1px solid rgba(103,232,249,.18);border-radius:999px;background:rgba(0,0,0,.62);padding:5px 8px}
+.meter{margin:10px 0;padding:10px;border:1px solid rgba(103,232,249,.14);border-radius:14px;background:rgba(255,255,255,.035)}
+.meter .top{display:flex;justify-content:space-between;font-size:12px;color:var(--mint);margin-bottom:6px}
+.track{height:9px;border:1px solid rgba(255,255,255,.12);border-radius:999px;background:#000;overflow:hidden}
+.fill{height:100%;background:linear-gradient(90deg,var(--cyan),var(--mint));width:50%}
+.bad{background:linear-gradient(90deg,var(--rose),var(--gold))}
+.footer{text-align:center;color:#80a6b5;font-size:11px;padding:0 0 18px}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div>
+    <h1>NINE-BODY CLOSED AUDIT TENSOR</h1>
+    <div style="color:var(--mint)">V9 / 3002 → . · as fair as possible by closed reciprocal audit</div>
+  </div>
+  <div class="sub">
+    law: no power audits itself<br/>
+    law: no data path validates itself alone<br/>
+    delta: 0.000000001
+  </div>
+</header>
+
+<div class="grid">
+<aside class="box">
+  <h3>Controls</h3>
+  <div class="row"><button id="step">Step</button><button id="run">Run</button></div>
+  <div class="row"><button id="audit">Audit V9</button><button id="swap">Swap Obs</button></div>
+  <div class="row"><button id="add">Add Worker</button><button id="ground">Ground</button></div>
+  <input id="task" value="define next bounded project action"/>
+  <button id="assign" style="margin-top:8px">Assign Through Closed Audit</button>
+
+  <h3 style="margin-top:18px">Vector</h3>
+  <div class="code">V9 =
+[HR,
+ P,
+ WORKER,
+ PROJECT,
+ SHADOW,
+ INPUT,
+ OUTPUT,
+ IO_FULCRUM,
+ WATCHER]
+
+CLOSURE:
+V9 / 3002 → .
+
+CHECK:
+all 9 agree within
+delta 0.000000001
+
+FAIL:
+unresolved pressure
+
+LAWS:
+no power audits itself
+no path validates itself alone
+every observer is observed</div>
+</aside>
+
+<main class="stage">
+  <canvas id="canvas"></canvas>
+  <div class="hud">
+    <div class="tag" id="cycle">CYCLE 0</div>
+    <div class="tag" id="closure">CLOSURE OPEN</div>
+    <div class="tag" id="state">STATE 0 / 3002</div>
+    <div class="tag" id="delta">Δ 0.000000001</div>
+    <div class="tag" id="witness">WITNESS --------</div>
+  </div>
+</main>
+
+<aside class="box">
+  <h3>Closure Meters</h3>
+  <div class="meter"><div class="top"><span>Rights Integrity</span><span id="rightsVal">100%</span></div><div class="track"><div class="fill" id="rights"></div></div></div>
+  <div class="meter"><div class="top"><span>Project Coherence</span><span id="coherenceVal">98%</span></div><div class="track"><div class="fill" id="coherence"></div></div></div>
+  <div class="meter"><div class="top"><span>Input Accuracy</span><span id="inputVal">100%</span></div><div class="track"><div class="fill" id="inputM"></div></div></div>
+  <div class="meter"><div class="top"><span>Output Accuracy</span><span id="outputVal">100%</span></div><div class="track"><div class="fill" id="outputM"></div></div></div>
+  <div class="meter"><div class="top"><span>IO Symmetry</span><span id="symVal">100%</span></div><div class="track"><div class="fill" id="symmetry"></div></div></div>
+  <div class="meter"><div class="top"><span>Shadow Pressure</span><span id="shadowVal">0%</span></div><div class="track"><div class="fill bad" id="shadow"></div></div></div>
+
+  <h3 style="margin-top:18px">Runtime Log</h3>
+  <div class="log" id="log"></div>
+
+  <h3 style="margin-top:18px">Packet</h3>
+  <div class="code" id="packet"></div>
+</aside>
+</div>
+<div class="footer">Nine-Body Closed Audit Tensor v1.0 — one coherent witness point from 3002 possible audit states.</div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const cv=$("canvas"),ctx=cv.getContext("2d");
+let W=0,H=0,D=1;
+function resize(){
+ const r=cv.getBoundingClientRect();
+ D=Math.max(1,devicePixelRatio||1);
+ W=r.width; H=r.height;
+ cv.width=W*D; cv.height=H*D;
+ ctx.setTransform(D,0,0,D,0,0);
+}
+new ResizeObserver(resize).observe(cv);resize();
+
+const COLORS={
+ HR:"#86efac", P:"#facc15", WORKER:"#67e8f9", PROJECT:"#67e8f9", SHADOW:"#c084fc",
+ INPUT:"#fb923c", OUTPUT:"#fb7185", IO:"#edfaff", WATCHER:"#ffffff"
+};
+
+const VM={
+ cycle:0,run:false,delta:0.000000001,witness:"--------",swap:false,stateIndex:0,closed:false,
+ workers:[{id:"W1",rights:1,load:.20},{id:"W2",rights:1,load:.15}],
+ log:[],rights:1,coherence:.98,inputAcc:1,outputAcc:1,symmetry:1,shadowPressure:0,pulses:[],
+ hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return (h>>>0).toString(16).padStart(8,"0")},
+ say(x){this.log.unshift("["+this.cycle+"] "+x);this.log=this.log.slice(0,100)},
+ step(){
+   this.cycle++;
+   this.workers.forEach(w=>{
+     w.load=Math.max(0,Math.min(1,w.load+(Math.random()-.48)*.035));
+     w.rights=Math.max(.72,Math.min(1,w.rights-(w.load>.82?.018:0)+.004));
+   });
+   this.rights=this.workers.reduce((a,w)=>a+w.rights,0)/this.workers.length;
+   const avgLoad=this.workers.reduce((a,w)=>a+w.load,0)/this.workers.length;
+   this.coherence=Math.max(.7,Math.min(1,.98-avgLoad*.075));
+   this.inputAcc=Math.max(.78,Math.min(1,this.inputAcc+(Math.random()-.49)*.018));
+   this.outputAcc=Math.max(.78,Math.min(1,this.outputAcc+(Math.random()-.49)*.018));
+   this.symmetry=Math.max(0,1-Math.abs(this.inputAcc-this.outputAcc)*4);
+   this.shadowPressure=Math.max(0,Math.min(1,(1-this.rights)*.55+(1-this.coherence)*.4+(1-this.symmetry)*.6));
+   if(this.cycle%9===0)this.audit();
+   this.pulses.push({life:90,x:Math.random(),y:Math.random(),c:this.closed?"#86efac":"#67e8f9"});
+   ui();
+ },
+ allPass(){
+   return this.rights>=.94 && this.coherence>=.94 && this.inputAcc>=.94 && this.outputAcc>=.94 && this.symmetry>=.94 && this.shadowPressure<=.09;
+ },
+ audit(){
+   this.closed=this.allPass();
+   this.stateIndex=this.closed?1:Math.max(2,Math.min(3002,Math.floor((1-this.score())*3002)));
+   this.witness=this.hash(JSON.stringify(this.packet()));
+   this.say((this.closed?"V9 CLOSED → .":"V9 OPEN → unresolved pressure")+" :: "+this.witness);
+ },
+ score(){
+   return (this.rights+this.coherence+this.inputAcc+this.outputAcc+this.symmetry+(1-this.shadowPressure))/6;
+ },
+ addWorker(){
+   const id="W"+(this.workers.length+1);
+   this.workers.push({id,rights:1,load:.1});
+   this.say("added worker-rights container "+id);
+   ui();
+ },
+ assign(task){
+   const w=this.workers.reduce((best,x)=>x.load<best.load?x:best,this.workers[0]);
+   if(!w){this.say("no worker container available");return}
+   if(w.rights<.85){this.say("HR blocks assignment: rights integrity too low");return}
+   if(this.inputAcc<.9){this.say("INPUT_AUDITOR blocks assignment: inbound data uncertain");return}
+   w.load=Math.min(1,w.load+.16);
+   this.outputAcc=Math.max(.78,this.outputAcc-.015);
+   this.say("P proposes → HR rights check → INPUT verifies → OUTPUT records → "+w.id+" receives bounded task: "+task);
+   this.audit();
+   ui();
+ },
+ ground(){
+   this.workers.forEach(w=>{w.load*=.35;w.rights=1});
+   this.rights=1;this.coherence=.98;this.inputAcc=1;this.outputAcc=1;this.symmetry=1;this.shadowPressure=0;
+   this.say("grounded V9 tensor");
+   this.audit();
+   ui();
+ },
+ packet(){
+   return {
+    artifact:"nine_body_closed_audit_tensor",
+    version:"1.0.0",
+    signature:"V9 / 3002 -> .",
+    bodies:["HR","PROJECT_MANAGER","WORKER","PROJECT","SHADOW_AUDITOR","INPUT_AUDITOR","OUTPUT_AUDITOR","IO_FULCRUM","WATCHER"],
+    cycle:this.cycle,
+    delta:this.delta,
+    laws:["no power audits itself","no system validates its own input or output alone","every observer is also observed"],
+    checks:{
+      rights_integrity:+this.rights.toFixed(9),
+      project_coherence:+this.coherence.toFixed(9),
+      input_accuracy:+this.inputAcc.toFixed(9),
+      output_accuracy:+this.outputAcc.toFixed(9),
+      io_symmetry:+this.symmetry.toFixed(9),
+      shadow_pressure:+this.shadowPressure.toFixed(9)
+    },
+    closure:{closed:this.closed,state_index:this.stateIndex,state_total:3002,vector:this.closed?".":"unresolved_pressure"},
+    witness:this.witness
+   }
+ }
+};
+
+function text(t,x,y,s=12,a=.8,c="#edfaff"){
+ ctx.save();ctx.globalAlpha=a;ctx.fillStyle=c;ctx.font=s+"px ui-monospace,monospace";ctx.textAlign="center";ctx.fillText(t,x,y);ctx.restore();
+}
+function line(x1,y1,x2,y2,a=.35,c="#67e8f9",w=1){
+ ctx.save();ctx.globalAlpha=a;ctx.strokeStyle=c;ctx.lineWidth=w;ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();ctx.restore();
+}
+function node(label,x,y,c="#67e8f9",r=10){
+ ctx.save();ctx.fillStyle=c;ctx.shadowColor=c;ctx.shadowBlur=16;ctx.globalAlpha=.9;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();ctx.restore();
+ text(label,x,y-r-8,11,.85,c);
+}
+
+function draw(){
+ ctx.clearRect(0,0,W,H);
+ const cx=W/2,cy=H/2;
+ ctx.save();ctx.strokeStyle=VM.closed?"#86efac":"#67e8f9";
+ for(let i=0;i<14;i++){
+   ctx.globalAlpha=.045+i*.006;
+   ctx.beginPath();
+   ctx.ellipse(cx,cy,165+i*33,86+i*18,VM.cycle*.002+i*.03,0,Math.PI*2);
+   ctx.stroke();
+ }
+ ctx.restore();
+
+ const HR=[cx-175,cy-110], P=[cx+175,cy-110], Worker=[cx-105,cy+70], Project=[cx+105,cy+70],
+       Shadow=[cx,cy+10], In=[cx-220,cy+215], Out=[cx+220,cy+215], IO=[cx,cy+230], Watcher=[cx,cy-255];
+
+ // governance tensor
+ line(HR[0],HR[1],P[0],P[1],.32,COLORS.HR);
+ line(HR[0],HR[1],Worker[0],Worker[1],.24,COLORS.HR);
+ line(P[0],P[1],Project[0],Project[1],.24,COLORS.P);
+ line(Worker[0],Worker[1],Project[0],Project[1],.28,COLORS.WORKER);
+ line(Shadow[0],Shadow[1],HR[0],HR[1],.22,COLORS.SHADOW);
+ line(Shadow[0],Shadow[1],P[0],P[1],.22,COLORS.SHADOW);
+ line(Shadow[0],Shadow[1],Worker[0],Worker[1],.18,COLORS.SHADOW);
+ line(Shadow[0],Shadow[1],Project[0],Project[1],.18,COLORS.SHADOW);
+
+ // IO tensor
+ line(In[0],In[1],Out[0],Out[1],.36,COLORS.INPUT);
+ line(In[0],In[1],IO[0],IO[1],.26,COLORS.IO);
+ line(Out[0],Out[1],IO[0],IO[1],.26,COLORS.IO);
+ line(IO[0],IO[1],Shadow[0],Shadow[1],.24,COLORS.IO);
+ line(IO[0],IO[1],Watcher[0],Watcher[1],.18,COLORS.WATCHER);
+ line(Watcher[0],Watcher[1],HR[0],HR[1],.15,COLORS.WATCHER);
+ line(Watcher[0],Watcher[1],P[0],P[1],.15,COLORS.WATCHER);
+
+ node("HR",HR[0],HR[1],COLORS.HR,12);
+ node("P",P[0],P[1],COLORS.P,12);
+ node("WORKER",Worker[0],Worker[1],COLORS.WORKER,12);
+ node("PROJECT",Project[0],Project[1],COLORS.PROJECT,14);
+ node("SHADOW",Shadow[0],Shadow[1],COLORS.SHADOW,10+VM.shadowPressure*8);
+ node("INPUT",In[0],In[1],COLORS.INPUT,11);
+ node("OUTPUT",Out[0],Out[1],COLORS.OUTPUT,11);
+ node("IO",IO[0],IO[1],COLORS.IO,10);
+ node(VM.swap?"WATCHER↔IN":"WATCHER",Watcher[0],Watcher[1],COLORS.WATCHER,10);
+
+ VM.workers.forEach((w,i)=>{
+   const a=i/VM.workers.length*Math.PI*2+VM.cycle*.01;
+   const x=Worker[0]+Math.cos(a)*55;
+   const y=Worker[1]+Math.sin(a)*32;
+   node(w.id,x,y,w.rights>.9?"#67e8f9":"#fb7185",5+6*w.load);
+ });
+
+ text("V9 / 3002 → "+(VM.closed?".":"unresolved pressure"),cx,H-42,18,.82,VM.closed?"#86efac":"#facc15");
+ text("closed reciprocal audit · delta 0.000000001",cx,34,13,.7,"#86efac");
+
+ VM.pulses.forEach(p=>{
+   p.life--;
+   ctx.save();ctx.globalAlpha=Math.max(0,p.life/90);ctx.strokeStyle=p.c;ctx.beginPath();ctx.arc(p.x*W,p.y*H,90-p.life,0,Math.PI*2);ctx.stroke();ctx.restore();
+ });
+ VM.pulses=VM.pulses.filter(p=>p.life>0);
+ requestAnimationFrame(draw);
+}
+
+function setMeter(id,val,labelId,fmt=v=>Math.round(v*100)+"%"){
+ $(id).style.width=(val*100)+"%";
+ $(labelId).textContent=fmt(val);
+}
+function ui(){
+ $("cycle").textContent="CYCLE "+VM.cycle;
+ $("closure").textContent=VM.closed?"CLOSURE .":"CLOSURE OPEN";
+ $("state").textContent="STATE "+VM.stateIndex+" / 3002";
+ $("delta").textContent="Δ "+VM.delta.toFixed(9);
+ $("witness").textContent="WITNESS "+VM.witness;
+ setMeter("rights",VM.rights,"rightsVal");
+ setMeter("coherence",VM.coherence,"coherenceVal");
+ setMeter("inputM",VM.inputAcc,"inputVal");
+ setMeter("outputM",VM.outputAcc,"outputVal");
+ setMeter("symmetry",VM.symmetry,"symVal");
+ setMeter("shadow",VM.shadowPressure,"shadowVal");
+ $("log").innerHTML=VM.log.map(x=>"<div>"+x+"</div>").join("");
+ $("packet").textContent=JSON.stringify(VM.packet(),null,2);
+}
+$("step").onclick=()=>VM.step();
+$("run").onclick=e=>{VM.run=!VM.run;e.target.textContent=VM.run?"Pause":"Run"};
+$("audit").onclick=()=>{VM.audit();ui()};
+$("swap").onclick=()=>{VM.swap=!VM.swap;VM.say("watcher swaps observer relation");ui()};
+$("add").onclick=()=>VM.addWorker();
+$("ground").onclick=()=>VM.ground();
+$("assign").onclick=()=>VM.assign($("task").value);
+setInterval(()=>{if(VM.run)VM.step()},700);
+VM.say("nine-body closed audit tensor online");
+VM.audit();
+ui();draw();
+</script>
+</body>
+</html>

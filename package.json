@@ -1,0 +1,16 @@
+{
+  "name": "nine-body-audit",
+  "version": "1.0.0",
+  "description": "Nine-body closed audit tensor. Fairness kernel: no actor audits itself. V9=[HR,PM,WORKER,PROJECT,SHADOW,INPUT,OUTPUT,IO_FULCRUM,WATCHER]. Closure via geometric resolution. JSON schema + interactive tool.",
+  "author": "David Lee Wise (ROOT0) / TriPod LLC",
+  "license": "CC-BY-ND-4.0",
+  "homepage": "https://github.com/DavidWise01/nine-body-audit",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DavidWise01/nine-body-audit.git"
+  },
+  "keywords": [
+    "audit", "fairness", "tensor", "nine-body", "governance",
+    "self-certification", "closure", "tripod", "root0"
+  ]
+}
